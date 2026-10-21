@@ -1,0 +1,1 @@
+# ADR: Monorepo with pnpm

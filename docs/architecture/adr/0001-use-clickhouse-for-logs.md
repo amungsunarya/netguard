@@ -1,0 +1,1 @@
+# ADR: ClickHouse for logs
