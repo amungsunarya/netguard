@@ -1,1 +1,7 @@
-# {"name":"@netguard/shared-types"}
+{
+  "name": "@netguard/shared-types",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts"
+}

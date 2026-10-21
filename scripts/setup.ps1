@@ -234,7 +234,15 @@ Write-Header "5. Docker Compose"
 if (-not $SkipDocker) {
     if (Test-Path "docker-compose.yml") {
         Write-Step "docker compose up -d..."
-        $null = docker compose up -d 2>&1
+        $prevEAP = $ErrorActionPreference
+$ErrorActionPreference = "Continue"
+$null = docker compose up -d 2>&1
+$dockerExitCode = $LASTEXITCODE
+$ErrorActionPreference = $prevEAP
+if ($dockerExitCode -ne 0) {
+    Write-Err "docker compose up gagal (exit $dockerExitCode)"
+    exit 1
+}
         if ($LASTEXITCODE -eq 0) {
             Write-Ok "docker compose up"
         }

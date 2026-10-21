@@ -1,0 +1,15 @@
+name: "Brute Force Detection"
+category: security
+schedule: "every 1m"
+description: "Deteksi 10+ auth failure dari IP sama dalam 5 menit"
+enabled: true
+query: |
+  SELECT source_ip, count() AS attempts
+  FROM logs
+  WHERE event_type = 'auth_failure'
+    AND timestamp > now() - INTERVAL 5 MINUTE
+  GROUP BY source_ip
+  HAVING attempts > 10
+action:
+  severity: critical
+  message: "Brute force dari {{source_ip}}"

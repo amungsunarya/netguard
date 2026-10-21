@@ -1,1 +1,9 @@
-# {"name":"netguard","private":true}
+{
+  "name": "netguard",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "pnpm --filter @netguard/web dev",
+    "build": "pnpm --filter @netguard/web build"
+  }
+}

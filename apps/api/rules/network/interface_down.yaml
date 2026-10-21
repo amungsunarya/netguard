@@ -1,0 +1,13 @@
+name: "Interface Down"
+category: network
+schedule: "every 30s"
+description: "Alert saat interface down lebih dari 30 detik"
+enabled: true
+query: |
+  SELECT device, interface
+  FROM metrics
+  WHERE metric_name = 'interface_status'
+    AND value = 0
+action:
+  severity: warning
+  message: "Interface {{interface}} down di {{device}}"

@@ -1,31 +1,47 @@
-version: '3.9'
-
-services:
-  clickhouse:
-    image: clickhouse/clickhouse-server:24.8
-    ports: ["8123:8123", "9000:9000"]
-    volumes: ["./data/clickhouse:/var/lib/clickhouse"]
-
-  victoriametrics:
-    image: victoriametrics/victoria-metrics:v1.102.0
-    ports: ["8428:8428"]
-    volumes: ["./data/vm:/victoria-metrics-data"]
-
+﻿services:
   postgres:
     image: postgres:16-alpine
-    ports: ["5432:5432"]
+    container_name: netguard-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_USER: netguard
       POSTGRES_PASSWORD: netguard
       POSTGRES_DB: netguard
-    volumes: ["./data/postgres:/var/lib/postgresql/data"]
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U netguard"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
-  nats:
-    image: nats:2.10-alpine
-    ports: ["4222:4222", "8222:8222"]
-
-  grafana:
-    image: grafana/grafana:11.1.0
-    ports: ["3000:3000"]
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8
+    container_name: netguard-clickhouse
+    restart: unless-stopped
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
     environment:
-      GF_SECURITY_ADMIN_PASSWORD: admin
+      CLICKHOUSE_DB: netguard
+      CLICKHOUSE_USER: netguard
+      CLICKHOUSE_PASSWORD: netguard
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - clickhouse_logs:/var/log/clickhouse-server
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8123/ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  clickhouse_data:
+  clickhouse_logs:

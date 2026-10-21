@@ -1,3 +1,2 @@
-# module github.com/org/netguard/agent
-
+module github.com/org/netguard/agent
 go 1.22

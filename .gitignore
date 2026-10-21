@@ -1,4 +1,47 @@
-# node_modules/
-bin/
+# ============================================
+# NetGuard .gitignore
+# ============================================
+
+# Node
+node_modules/
 dist/
+.vite/
+*.log
+npm-debug.log*
+
+# Data (JANGAN commit database files)
+data/
+*.sql.gz
+*.zip
+
+# Environment
 .env
+.env.local
+.env.production.local
+*.env.bak
+
+# Build
+bin/
+*.exe
+*.test
+*.out
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup
+*.bak
+_backup/
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+build-*.log
+start.log
